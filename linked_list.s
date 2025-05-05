@@ -121,6 +121,7 @@ set_data:
 begin:
     movq (%rcx), %rax
     ret
+
 .global at
 at:
     pushq %rbp
@@ -142,6 +143,29 @@ at:
     addq $16, %rsp
     popq %rbp
     ret
+.global advance
+advance:
+    pushq %rbp
+    movq %rsp, %rbp
+    subq $16, %rsp
+
+    movq %rcx, %rax
+
+    movl $0, -4(%rbp)
+    advance0:
+        incl -4(%rbp)
+        cmpl %edx, -4(%rbp)
+        jg advance1
+
+        movq (%rax), %rax
+
+        jmp advance0
+    advance1:
+
+    addq $16, %rsp
+    popq %rbp
+    ret
+
 .global end
 end:
     movq 8(%rcx), %rax
